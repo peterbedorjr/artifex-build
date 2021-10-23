@@ -9,9 +9,6 @@
     "bin/cli.js",
     "lib/**/*.js"
   ],
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "keywords": [],
   "author": "Peter Bedor",
   "license": "MIT",
