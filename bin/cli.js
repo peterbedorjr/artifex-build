@@ -194,7 +194,7 @@ const program = new Command();
 
 program.version(pkg.version);
 
-const commands = ['build', 'dump'];
+const commands = ['build', 'dump', 'inspect', 'eject', 'eslint', 'stylelint', 'serve'];
 
 program
     .command('build')
@@ -204,24 +204,83 @@ program
     .option('-l, --lint', 'Lint Vue and JS files', { defaultValue: true })
     .option('-m, --mode [mode]', 'The environment to build for', 'production')
     .action((options) => {
-        artifex.run('build', options).catch((err) => {
+        artifex.run('build', options).then((message) => {
             log();
-            log(err);
+            log(message);
+            process.exit(1);
+        }).catch((err) => {
+            log();
+            error(err);
             process.exit(1);
         });
     });
 
 program
+    .command('serve')
+    .description('start development server and watch files for changes')
+    .option('-m, --mode [mode]', 'The environment for which to build', 'development')
+    .action((options) => {
+        artifex.pushPlugin('./config/browser-sync');
+        artifex.run('serve', options).catch((err) => {
+            log(err);
+        });
+    });
+
+program
     .command('dump')
-    .description('dump underlying webpack config')
+    .description('dump the current webpack config to the console')
     .action((options) => {
         artifex.run('dump', options).catch((err) => {
             log();
-            log(err);
+            error(err);
             process.exit(1);
         });
     });
 
+program
+    .command('eject')
+    .description('copies specified configuration file to project root')
+    .requiredOption('-c, --config <config>', 'Open webpack bundle analyzer in a browser')
+    .action((options) => {
+        artifex.run('eject', options).catch((err) => {
+            log();
+            error(err);
+            process.exit(1);
+        });
+    });
+
+program
+    .command('inspect')
+    .description('log the current webpack config to the console')
+    .action((options) => {
+        artifex.run('inspect', options).catch((err) => {
+            log();
+            error(err);
+            process.exit(1);
+        });
+    });
+
+program
+    .command('eslint')
+    .description('lint the project with eslint')
+    .option('-f, --fix', 'automatically fix certain eslint errors')
+    .option('-s, --silent', 'don\'t report errors or warnings')
+    .action((options) => {
+        artifex.run('eslint', options).catch((err) => {
+            log(err);
+        });
+    });
+
+program
+    .command('stylelint')
+    .description('lint the project with eslint')
+    .option('-f, --fix', 'automatically fix certain eslint errors')
+    .option('-s, --silent', 'don\'t report errors or warnings')
+    .action((options) => {
+        artifex.run('stylelint', options).catch((err) => {
+            log(err);
+        });
+    });
 
 function registerUsercommands() {
     const artifex = new Artifex(process.env.WEE_CLI_CONTEXT || process.cwd());
@@ -238,6 +297,26 @@ registerUsercommands();
 if (!process.argv.slice(2).length) {
     program.outputHelp();
 }
+
+// lol
+program.on('command:party', () => {
+    const request = require('request');
+
+    request
+        .get('http://parrot.live')
+        .on('response', (response) => {
+            response.setEncoding('utf8');
+            response.on('data', (chunk) => {
+                console.log(chunk);
+            });
+
+            setTimeout(() => {
+                log();
+                log('Okay, party\'s over...');
+                process.exit(1);
+            }, 20000);
+        });
+});
 
 program.on('command:*', ([cmd]) => {
     const match = didyoumean(cmd, commands);
