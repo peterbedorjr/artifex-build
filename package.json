@@ -9,9 +9,13 @@
     "bin/cli.js",
     "lib/**/*.js"
   ],
+  "scripts": {},
   "keywords": [],
   "author": "Peter Bedor",
   "license": "MIT",
+  "np": {
+    "tests": false
+  },
   "dependencies": {
     "@babel/eslint-parser": "^7.15.8",
     "@babel/plugin-proposal-object-rest-spread": "^7.15.6",
