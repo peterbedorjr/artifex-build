@@ -9,7 +9,9 @@
     "bin/cli.js",
     "lib/**/*.js"
   ],
-  "scripts": {},
+  "scripts": {
+    "test": ""
+  },
   "keywords": [],
   "author": "Peter Bedor",
   "license": "MIT",
