@@ -5,12 +5,16 @@
   "bin": {
     "artifex": "bin/cli.js"
   },
+  "files": [
+    "bin/cli.js",
+    "lib/**/*.js"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Peter Bedor",
+  "license": "MIT",
   "dependencies": {
     "@babel/eslint-parser": "^7.15.8",
     "@babel/plugin-proposal-object-rest-spread": "^7.15.6",
