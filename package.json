@@ -10,7 +10,8 @@
     },
     "files": [
         "bin/cli.js",
-        "lib/**/*.js"
+        "lib/**/*.js",
+        "utils/**/*.js"
     ],
     "scripts": {
         "test": ""
