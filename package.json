@@ -11,7 +11,8 @@
     "files": [
         "bin/cli.js",
         "lib/**/*.js",
-        "utils/**/*.js"
+        "utils/**/*.js",
+        "plugins/**/*.js"
     ],
     "scripts": {
         "test": ""
