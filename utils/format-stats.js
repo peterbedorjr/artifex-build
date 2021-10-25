@@ -1,3 +1,9 @@
+const fs = require('fs');
+const path = require('path');
+const zlib = require('zlib');
+const chalk = require('chalk');
+const ui = require('cliui')({ width: 100 });
+
 /*
 * The MIT License (MIT)
 *
@@ -5,12 +11,6 @@
 */
 
 module.exports = function formatStats(stats, dir, api) {
-    const fs = require('fs');
-    const path = require('path');
-    const zlib = require('zlib');
-    const chalk = require('chalk');
-    const ui = require('cliui')({ width: 100 });
-
     const json = stats.toJson({
         hash: false,
         modules: false,
@@ -81,8 +81,7 @@ module.exports = function formatStats(stats, dir, api) {
     }
 
     function getGzippedSize(asset) {
-        const type = isJS(asset.name) ? 'scripts' : 'styles';
-        const filepath = api.resolve(path.join(dir, type, asset.name));
+        const filepath = api.resolve(path.join(dir, asset.name));
         const buffer = fs.readFileSync(filepath);
         const size = zlib.gzipSync(buffer).length;
 
@@ -103,8 +102,8 @@ module.exports = function formatStats(stats, dir, api) {
         ) + `\n\n` +
         assets.map((asset) => makeRow(
             /js$/.test(asset.name)
-                ? chalk.green(path.join(dir, 'scripts', asset.name))
-                : chalk.blue(path.join(dir, asset.name.replace('../', ''))),
+                ? chalk.green(asset.name)
+                : chalk.blue(asset.name),
             formatSize(asset.size),
             getGzippedSize(asset)
         )).join(`\n`) + `\n\n\n` +
