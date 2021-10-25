@@ -41,7 +41,8 @@ if (!process.argv.slice(2).length) {
 program
     .command('build')
     .description('build for specified environment')
-    .option('-r, --report', 'Open webpack bundle analyzer in a browser')
+    .option('-rs, --report-size', 'Open webpack bundle analyzer in a browser')
+    .option('-rsp, --report-speed', 'Report webpack build speed')
     .option('-s, --silent', 'Do not output any information to the console')
     .option('-l, --lint', 'Lint Vue and JS files', { defaultValue: true })
     .option('-m, --mode [mode]', 'The environment to build for', 'production')
@@ -78,6 +79,21 @@ program
     .description('log the current webpack config to the console')
     .action(actionHandler);
 
+program
+    .command('serve')
+    .description('start development server and watch files for changes')
+    .option('-m, --mode [mode]', 'The environment for which to build', 'development')
+    .option('-s, --server [server]', 'The server to use', 'browser-sync')
+    .action((options) => {
+        if (options.server === 'browser-sync') {
+            artifex.pushPlugin('./config/browser-sync');
+        }
+
+        artifex.run('serve', options).catch((err) => {
+            log(err);
+        });
+    });
+
 // lol
 program.on('command:party', () => {
     const request = require('request');
@@ -97,14 +113,6 @@ program.on('command:party', () => {
             }, 20000);
         });
 });
-
-(function() {
-    const userCommands = glob.sync(`${path.resolve(process.cwd(), 'source/commands')}/**/*.js`);
-
-    userCommands.forEach((cmd) => {
-        require(cmd)(program, artifex);
-    });
-})();
 
 program.on('command:*', ([cmd]) => {
     const match = didyoumean(cmd, commands);
